@@ -19,6 +19,7 @@ impl Color {
     pub const BLACK: Color = Color { red: 0, green: 0, blue: 0 };
     pub const RED: Color = Color { red: 255, green: 0, blue: 0 };
     pub const GREEN: Color = Color { red: 0, green: 255, blue: 0 };
+    pub const BLUE: Color = Color { red: 0, green: 0, blue: 255 };
 
     // Convert Color to RGBA format
     fn to_rgba(&self) -> (u8, u8, u8, u8) {

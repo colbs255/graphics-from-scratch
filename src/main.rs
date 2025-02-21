@@ -18,6 +18,7 @@ fn main() {
         NDC::new(0.25, 0.75).unwrap(),
         NDC::new(0.5, 0.5).unwrap(),
     );
+    circle(&mut img, Color::BLUE, NDC::new(0.5, 0.5).unwrap(), 30.0);
 
     let _ = img.save_to_png("output.png");
 }
@@ -34,6 +35,47 @@ impl NDC {
             Some(NDC { x, y })
         } else {
             None
+        }
+    }
+
+    pub fn dist(&self, other: NDC) -> f32 {
+        let dx = other.x - self.x;
+        let dy = other.y - self.y;
+        (dx.powi(2) + dy.powi(2)).sqrt()
+    }
+}
+
+struct Vec2 {
+    x: f32,
+    y: f32,
+}
+
+impl Vec2 {
+    fn distance(&self, other: Vec2) -> f32 {
+        let dx = other.x - self.x;
+        let dy = other.y - self.y;
+        (dx.powi(2) + dy.powi(2)).sqrt() // Calculate the Euclidean distance
+    }
+}
+
+fn circle(img: &mut Image, color: Color, center: NDC, radius: f32) {
+    let width = img.width() as f32;
+    let height = img.height() as f32;
+    let x_min = (center.x * width - radius).floor() as usize;
+    let x_max = (center.x * width + radius).floor() as usize;
+    let y_min = (center.y * height - radius).floor() as usize;
+    let y_max = (center.y * height + radius).floor() as usize;
+
+    let center_vec = Vec2 {
+        x: center.x * width,
+        y: center.y * height,
+    };
+    for x in x_min..=x_max {
+        for y in y_min..=y_max {
+            let p = Vec2 { x: x as f32, y: y as f32 };
+            if center_vec.distance(p) < radius {
+                img.set_pixel(x, y, color);
+            }
         }
     }
 }
